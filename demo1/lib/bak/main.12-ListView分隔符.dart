@@ -26,21 +26,36 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeContent extends StatelessWidget {
-  
   // item build 方法
   Widget _buildListItem(BuildContext context, int index) {
     Map newsItem = newsList.news[index];
     return ListItem(
-      title: newsItem['title'],
-      subTitle: newsItem['time'],
-    );
+        title: newsItem['title'],
+        subTitle: newsItem['time'],
+        cover: newsItem['imgurl']);
   }
 
+  // 无分割线的列表
+  // @override
+  // Widget build(BuildContext context) {
+  //   return ListView.builder(
+  //       itemCount: newsList.news.length,
+  //       itemBuilder: this._buildListItem); // 接收的两个参数
+
+  // }
+
+  // 能够生成下划线的列表
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: newsList.news.length,
-        itemBuilder: this._buildListItem); // 接收的两个参数
+    return ListView.separated(
+      itemCount: newsList.news.length,
+      itemBuilder: this._buildListItem,
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider(
+          color: Colors.grey[350],
+        );
+      },
+    ); // 接收的两个参数
   }
 }
 
@@ -54,6 +69,12 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      leading: Container(
+        child: Image.network(cover),
+        color: Colors.grey,
+        width: 80,
+        height: 80,
+      ),
       trailing: Icon(Icons.chevron_right),
       title: Text(this.title),
       subtitle: Text(this.subTitle),

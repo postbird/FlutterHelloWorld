@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('ListView Widget'),
+          title: Text('GridView Widget'),
           backgroundColor: Colors.pink,
         ),
         body: HomeContent(),
@@ -26,37 +26,32 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeContent extends StatelessWidget {
-  
-  // item build 方法
-  Widget _buildListItem(BuildContext context, int index) {
-    Map newsItem = newsList.news[index];
-    return ListItem(
-      title: newsItem['title'],
-      subTitle: newsItem['time'],
-    );
+  // 生成一个列表
+  List<Widget> _getGridList() {
+    return newsList.news.map((item) {
+      return GridViewItem();
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: newsList.news.length,
-        itemBuilder: this._buildListItem); // 接收的两个参数
+    return GridView.count(
+      children: _getGridList(),
+      crossAxisCount: 3,
+      padding: EdgeInsets.all(10),
+      crossAxisSpacing: 20, // 水平距离
+      mainAxisSpacing: 20, // 垂直距离
+      childAspectRatio: 1.3, // 宽高比例
+    );
   }
 }
 
-class ListItem extends StatelessWidget {
-  ListItem({this.title, this.subTitle, this.cover});
-
-  final String title;
-  final String subTitle;
-  final String cover;
-
+class GridViewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      trailing: Icon(Icons.chevron_right),
-      title: Text(this.title),
-      subtitle: Text(this.subTitle),
+    return Container(
+      child: Text('文本'),
+      color: Colors.pink[200],
     );
   }
 }
