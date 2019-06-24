@@ -18,75 +18,63 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('自定义 AppBar'),
-          centerTitle: true,
+          title: Text('TabController'),
           backgroundColor: Colors.pink,
-          leading: IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () {
-              print('home app bar');
-            },
-          ),
-          actions: <Widget>[
-            Center(
-              child: Text('所有订单'),
-            ),
-            IconButton(
-              icon: Icon(Icons.more_horiz),
-              onPressed: () {},
-            ),
-          ],
         ),
-        body: HomeContent(),
+        body: TabControllerDemo(),
       ),
     );
   }
 }
 
-class HomeContent extends StatelessWidget {
-  const HomeContent({Key key}) : super(key: key);
+class TabControllerDemo extends StatefulWidget {
+  TabControllerDemo({Key key}) : super(key: key);
+
+  _TabControllerDemoState createState() => _TabControllerDemoState();
+}
+
+class _TabControllerDemoState extends State<TabControllerDemo>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    this._tabController = new TabController(vsync: this, length: 5);
+    this._tabController.addListener(() {
+      print(this._tabController.toString());
+      print(this._tabController.index);
+      print(this._tabController.length);
+      print(this._tabController.previousIndex);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 9,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black,
           title: TabBar(
-            labelColor: Colors.yellow,
-            unselectedLabelColor: Colors.white,
-            indicatorWeight: 1,
-            isScrollable: true,
-            // labelPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-            labelStyle: TextStyle(fontSize: 14),
+            controller: this._tabController,
             tabs: <Widget>[
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
+              Tab(text: '女装'),
+              Tab(text: '男装'),
+              Tab(text: '童装'),
+              Tab(text: '夏装'),
+              Tab(text: '冬装'),
             ],
           ),
         ),
         body: TabBarView(
+          controller: this._tabController,
           children: <Widget>[
             ListViewContnet(),
             ListViewContnet(),
             ListViewContnet(),
             ListViewContnet(),
             ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
 
