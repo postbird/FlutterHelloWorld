@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('AnimatedOpacity Widget'),
+          title: Text('AnimatedContainer Widget'),
           backgroundColor: Colors.pink,
         ),
         body: HomeContent(),
@@ -28,15 +28,22 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  double _opacity = 1.0;
-  Matrix4 _transform = Matrix4.translationValues(0, 0, 0);
+  double _width = 60;
+  double _height = 60;
+  Color _color = Colors.pink;
+  Matrix4 _transform = null;
+  BorderRadius _borderRadius = BorderRadius.circular(8);
 
   void _onTapHandle() {
+    Random random = new Random();
     setState(() {
-      _opacity = _opacity == 1.0 ? 0.0 : 1.0;
-      _transform = _opacity == 0.0
-          ? Matrix4.translationValues(-300, 0, 0)
-          : Matrix4.translationValues(0, 0, 0);
+      _width = random.nextInt(300).toDouble();
+      _height = random.nextInt(300).toDouble();
+      _borderRadius = BorderRadius.circular(random.nextInt(300).toDouble());
+      _color = Color.fromARGB(
+          255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+      _transform = Matrix4.translationValues(
+          random.nextInt(50).toDouble(), random.nextInt(50).toDouble(), random.nextInt(50).toDouble());
     });
   }
 
@@ -45,30 +52,17 @@ class _HomeContentState extends State<HomeContent> {
     return Stack(
       children: <Widget>[
         Center(
-          child: Column(
-            children: <Widget>[
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                transform: _transform,
-                child: AnimatedOpacity(
-                  opacity: _opacity,
-                  duration: Duration(milliseconds: 500),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 50,
-                    color: Colors.pink,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                alignment: Alignment.center,
-                width: 100,
-                height: 50,
-                color: Colors.blue,
-              ),
-            ],
+          child: AnimatedContainer(
+            width: _width,
+            height: _height,
+            decoration: BoxDecoration(
+              borderRadius: _borderRadius,
+              color: _color,
+            ),
+            transform: _transform,
+            duration: Duration(
+              milliseconds: 500,
+            ),
           ),
         ),
         Positioned(
