@@ -43,17 +43,28 @@ class HomeContent extends StatelessWidget {
         // padding: EdgeInsets.all(20),
         padding: EdgeInsets.fromLTRB(20, 10, 40, 20),
         margin: EdgeInsets.only(top: 100),
-        transform: Matrix4.translationValues(30, 0, 0),
+        transform: Matrix4.translationValues(10, 0, 0),
         // transform: Matrix4.rotationX(5),
         alignment: Alignment.bottomLeft,
         decoration: BoxDecoration(
-            color: Colors.pink,
-            border: Border.all(
-              color: Colors.black,
-              style: BorderStyle.solid,
-              width: 2,
+          boxShadow: [
+            // 阴影
+            BoxShadow(
+              color: Colors.grey[500],
+              offset: Offset(10.0, 12.0),
+              blurRadius: 4.0,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(12))),
+          ],
+          color: Colors.pink,
+          border: Border.all(
+            color: Colors.black,
+            style: BorderStyle.solid,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(12),
+          ),
+        ),
       ),
     );
   }
