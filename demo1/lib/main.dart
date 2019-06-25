@@ -57,7 +57,7 @@ class HomeContent extends StatelessWidget {
           ],
           color: Colors.pink,
           border: Border.all(
-            color: Colors.black,
+            color: Colors.black, 
             style: BorderStyle.solid,
             width: 2,
           ),
