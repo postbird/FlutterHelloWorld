@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../supplemental/cut_corners_border.dart';
 import 'colors.dart';
 
 final ThemeData lightTheme = _buildTheme();
@@ -20,6 +21,7 @@ ThemeData _buildTheme() {
     primaryIconTheme: base.iconTheme.copyWith(
       color: kShrineBrown900,
     ),
+    inputDecorationTheme: InputDecorationTheme(border: CutCornersBorder()),
   );
 }
 

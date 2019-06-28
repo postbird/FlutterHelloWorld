@@ -1,3 +1,4 @@
+// import 'package:demo2/supplemental/cut_corners_border.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
@@ -31,7 +32,7 @@ class Login extends StatelessWidget {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 15),
                     labelText: 'Username',
-                    border: OutlineInputBorder(),
+                    border: Theme.of(context).inputDecorationTheme.border,
                   ),
                 ),
                 color: Theme.of(context).accentColor,
@@ -44,7 +45,7 @@ class Login extends StatelessWidget {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 15),
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
+                    border: Theme.of(context).inputDecorationTheme.border,
                   ),
                 ),
                 color: Theme.of(context).accentColor,
@@ -56,6 +57,9 @@ class Login extends StatelessWidget {
                   FlatButton(
                     textColor: Colors.black54,
                     child: Text('CENCEL'),
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
                     onPressed: () {
                       _userNameController.clear();
                       _passwordController.clear();
@@ -67,6 +71,9 @@ class Login extends StatelessWidget {
                     elevation: 8.0,
                     color: Theme.of(context).buttonColor,
                     child: Text('LOGIN'),
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(7.0),
+                    ),
                     onPressed: () {},
                   ),
                 ],
