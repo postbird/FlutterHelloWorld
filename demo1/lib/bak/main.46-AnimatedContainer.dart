@@ -42,8 +42,8 @@ class _HomeContentState extends State<HomeContent> {
       _borderRadius = BorderRadius.circular(random.nextInt(300).toDouble());
       _color = Color.fromARGB(
           255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-      _transform = Matrix4.translationValues(
-          random.nextInt(50).toDouble(), random.nextInt(50).toDouble(), random.nextInt(50).toDouble());
+      _transform = Matrix4.translationValues(random.nextInt(50).toDouble(),
+          random.nextInt(50).toDouble(), random.nextInt(50).toDouble());
     });
   }
 
@@ -68,7 +68,7 @@ class _HomeContentState extends State<HomeContent> {
         Positioned(
           bottom: 1,
           right: 1,
-          child: InkWell(
+          child: GestureDetector(
             child: Container(
               width: 50,
               height: 50,

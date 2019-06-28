@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:transparent_image/transparent_image.dart';
 
-const IMAGE_SRC = 'http://static.ptbird.cn/usr/uploads/2019/06/335426680.jpg';
+const IMAGE_SRC = 'https://picsum.photos/id/142/600/400';
 
 void main() {
   runApp(MyApp());
@@ -27,10 +29,21 @@ class HomeContent extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
-          ImageDemo1(),
-          ImageDemo2(),
-          ImageDemo3(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              ImageDemo1(),
+              ImageDemo2(),
+              ImageDemo3(),
+            ],
+          ),
           ImageDemo4(),
+          Row(
+            children: <Widget>[
+              ImageDemo5(),
+              FadeInImageDemo(),
+            ],
+          ),
         ],
       ),
     );
@@ -68,7 +81,7 @@ class ImageDemo2 extends StatelessWidget {
         IMAGE_SRC,
         fit: BoxFit.cover,
         width: 100,
-        height: 100, 
+        height: 100,
         // color: Colors.black
       ),
     );
@@ -101,6 +114,42 @@ class ImageDemo4 extends StatelessWidget {
       child: Image.asset('images/demo.png', fit: BoxFit.contain),
       width: 100,
       height: 100,
+    );
+  }
+}
+
+// 网络缓存图片
+class ImageDemo5 extends StatelessWidget {
+  const ImageDemo5({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: CachedNetworkImage(
+        width: 100,
+        height: 50,
+        fit: BoxFit.cover,
+        imageUrl: IMAGE_SRC,
+        placeholder: (context, url) => CircularProgressIndicator(
+            // backgroundColor: Colors.pink,
+            ),
+        errorWidget: (context, url, error) => Icon(Icons.error),
+      ),
+    );
+  }
+}
+
+// FadeInImage
+class FadeInImageDemo extends StatelessWidget {
+  const FadeInImageDemo({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInImage.assetNetwork(
+      placeholder: 'images/loading.gif',
+      image: IMAGE_SRC,
+      width: 100,
+      height: 50,
     );
   }
 }

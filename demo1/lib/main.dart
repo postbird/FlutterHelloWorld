@@ -1,96 +1,122 @@
-import 'dart:math';
+import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
-void main() {
-  runApp(MyApp());
+void main() => runApp(CupertinoAppDemo());
+
+Future fetchGoodsList() async {
+  const String url =
+      'https://activity.kaola.com/activity/newArrival/goodsList.html?acId=440&limit=48&offset=0';
+  http.Response response = await http.get(url);
+  return json.decode(response.body).data.goodsList;
 }
 
-class MyApp extends StatelessWidget {
+class CupertinoAppDemo extends StatelessWidget {
+  const CupertinoAppDemo({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('AnimatedOpacity Widget'),
-          backgroundColor: Colors.pink,
+    return CupertinoApp(
+      home: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text('CupertinoApp'),
         ),
-        body: HomeContent(),
+        child: HomeContent(),
       ),
     );
   }
 }
 
-class HomeContent extends StatefulWidget {
-  HomeContent({Key key}) : super(key: key);
-
-  _HomeContentState createState() => _HomeContentState();
-}
-
-class _HomeContentState extends State<HomeContent> {
-  double _opacity = 1.0;
-  Matrix4 _transform = Matrix4.translationValues(0, 0, 0);
-
-  void _onTapHandle() {
-    setState(() {
-      _opacity = _opacity == 1.0 ? 0.0 : 1.0;
-      _transform = _opacity == 0.0
-          ? Matrix4.translationValues(-300, 0, 0)
-          : Matrix4.translationValues(0, 0, 0);
-    });
-  }
+class HomeContent extends StatelessWidget {
+  const HomeContent({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Center(
-          child: Column(
-            children: <Widget>[
-              AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                transform: _transform,
-                child: AnimatedOpacity(
-                  opacity: _opacity,
-                  duration: Duration(milliseconds: 500),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    height: 50,
-                    color: Colors.pink,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                alignment: Alignment.center,
-                width: 100,
-                height: 50,
-                color: Colors.blue,
-              ),
-            ],
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home),
+            title: Text('Products'),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.search),
+            title: Text('Search'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.shopping_cart),
+            title: Text('Cart'),
+          ),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        switch (index) {
+          case 1:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: SearchTab(),
+              );
+            });
+          case 2:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: CartTab(),
+              );
+            });
+          default:
+            return CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: ProductListTab(),
+              );
+            });
+        }
+      },
+    );
+  }
+}
+
+class ProductListTab extends StatelessWidget {
+  const ProductListTab({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: const <Widget>[
+        CupertinoSliverNavigationBar(
+          largeTitle: Text('Cupertino Store'),
         ),
-        Positioned(
-          bottom: 1,
-          right: 1,
-          child: InkWell(
-            child: Container(
-              width: 50,
-              height: 50,
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.pink,
-              ),
-              child: Icon(
-                Icons.play_arrow,
-                color: Colors.white,
-              ),
-            ),
-            onTap: _onTapHandle,
-          ),
-        )
+      ],
+    );
+  }
+}
+
+class SearchTab extends StatelessWidget {
+  const SearchTab({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: const <Widget>[
+        CupertinoSliverNavigationBar(
+          largeTitle: Text('Search'),
+        ),
+      ],
+    );
+  }
+}
+
+class CartTab extends StatelessWidget {
+  const CartTab({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: const <Widget>[
+        CupertinoSliverNavigationBar(
+          largeTitle: Text('Cart'),
+        ),
       ],
     );
   }
