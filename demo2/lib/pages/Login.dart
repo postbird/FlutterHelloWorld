@@ -64,6 +64,7 @@ class Login extends StatelessWidget {
                   ),
                   SizedBox(width: 15.0),
                   RaisedButton(
+                    elevation: 8.0,
                     color: Theme.of(context).buttonColor,
                     child: Text('LOGIN'),
                     onPressed: () {},
