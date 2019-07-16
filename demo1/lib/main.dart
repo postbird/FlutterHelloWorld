@@ -4,7 +4,7 @@ import 'mock/list.dart' as newsList;
 const TITLE = '标题标题标题标题标题标题标题';
 const SUB_TITLE = '二级标题二级标题二级标题二级标题二级标题二级标题二级标题二级标题二';
 const IMAGE_SRC =
-    'https://cdn.pixabay.com/photo/2019/05/20/13/22/portugal-4216645_1280.jpg';
+    'http://cms-bucket.ws.126.net/2019/06/20/68fa7f186ffe4479ab27efabd4d94246.png';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('ListView Widget'),
+          title: Text('StatefulWidget'),
           backgroundColor: Colors.pink,
         ),
         body: HomeContent(),
@@ -25,64 +25,69 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
 class HomeContent extends StatelessWidget {
-  // item build 方法
-  Widget _buildListItem(BuildContext context, int index) {
-    Map newsItem = newsList.news[index];
-    return ListItem(
-        title: newsItem['title'],
-        subTitle: newsItem['time'],
-        cover: newsItem['imgurl']);
-  }
-
-  // 无分割线的列表
-  // @override
-  // Widget build(BuildContext context) {
-  //   return ListView.builder(
-  //       itemCount: newsList.news.length,
-  //       itemBuilder: this._buildListItem); // 接收的两个参数
-
-  // }
-
-  // 能够生成下划线的列表
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: newsList.news.length,
-      itemBuilder: this._buildListItem,
-//      separatorBuilder: (BuildContext context, int index) {
-//        return index % 2 == 0
-//            ? Divider(color: Colors.blue)
-//            : Divider(color: Colors.red);
-//      },
-      separatorBuilder: (BuildContext context, int index) {
-        return index % 2 == 0
-            ? Icon(Icons.arrow_drop_down)
-            : Icon(Icons.arrow_downward);
-      },
-    ); // 接收的两个参数
+    return NumberCounter();
   }
 }
 
-class ListItem extends StatelessWidget {
-  ListItem({this.title, this.subTitle, this.cover});
+class NumberCounter extends StatefulWidget {
+  @override
+  _NumberCounterState createState() => _NumberCounterState();
+}
 
-  final String title;
-  final String subTitle;
-  final String cover;
+class _NumberCounterState extends State<NumberCounter> {
+  int num = 0;
+
+
+  initState() {
+    num = 2;
+  }
+
+
+
+  // num set state
+  numSetState([bool flag = true]) {
+    return () => setState(() {
+      flag ? num++ : num--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        child: Image.network(cover),
-        color: Colors.grey,
-        width: 80,
-        height: 80,
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            num.toString(),
+            style: TextStyle(
+              color: Colors.pink,
+              fontSize: 40,
+            ),
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: <Widget>[
+              FlatButton(
+                child: Text('+'),
+                onPressed: numSetState(true),
+                color: Theme.of(context).buttonColor,
+              ),
+              SizedBox(width: 10),
+              FlatButton(
+                child: Text('-'),
+                onPressed: numSetState(false),
+                color: Theme.of(context).buttonColor,
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          )
+        ],
       ),
-      trailing: Icon(Icons.chevron_right),
-      title: Text(this.title),
-      subtitle: Text(this.subTitle),
     );
   }
 }
