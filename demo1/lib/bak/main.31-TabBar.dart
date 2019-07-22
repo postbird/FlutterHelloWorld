@@ -37,53 +37,50 @@ class MyApp extends StatelessWidget {
             ),
           ],
         ),
-        body: HomeContent(),
-      ),
-    );
-  }
-}
-
-class HomeContent extends StatelessWidget {
-  const HomeContent({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 9,
-      child: Scaffold(
-        appBar: AppBar(
-          title: TabBar(
-            labelColor: Colors.yellow,
-            unselectedLabelColor: Colors.white,
-            indicatorWeight: 1,
-            isScrollable: true,
-            // labelPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-            labelStyle: TextStyle(fontSize: 14),
-            tabs: <Widget>[
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
-              Tab(text: 'Tab1'),
+        body: DefaultTabController(
+          length: 9,
+          child: Column(
+            children: <Widget>[
+              Container(
+                color: Colors.pink,
+                child: TabBar(
+                  labelColor: Colors.yellow,
+                  unselectedLabelColor: Colors.white,
+                  indicatorWeight: 1,
+                  isScrollable: true,
+                  // labelPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  labelStyle: TextStyle(fontSize: 14),
+                  tabs: <Widget>[
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                    Tab(text: 'Tab1'),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: TabBarView(
+                  children: <Widget>[
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                    ListViewContnet(),
+                  ],
+                ),
+              )
             ],
           ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-            ListViewContnet(),
-          ],
         ),
       ),
     );
