@@ -27,13 +27,17 @@ class HomeContent extends StatelessWidget {
               child: Text('open new route'),
               color: Colors.yellow,
               onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (context) {
-                      return NewRouteWidget();
-                    },
-                    settings:
-                        RouteSettings(arguments: {'name': 'postbird'}), // 传参
-                    fullscreenDialog: true));
+              Navigator.of(context).push(
+                new MaterialPageRoute(
+                  builder: (context) {
+                    return NewRouteWidget();
+                  },
+                  settings: RouteSettings(
+                    arguments: {'name': 'postbird'},
+                  ), // 传参
+                  fullscreenDialog: true,
+                ),
+              );
               },
             )
           ],
