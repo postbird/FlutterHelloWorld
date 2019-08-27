@@ -21,10 +21,37 @@ class MyApp extends StatelessWidget {
           appBar: AppBar(
             title: Text('文件读写 Demo'),
           ),
-          body: FileIODemo()),
+          body: HomeDemo()),
     );
   }
 }
+
+class HomeDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: OutlineButton(
+        child: Text('go to counter'),
+        onPressed: () => {
+          Navigator.of(context).push(MaterialPageRoute(builder:(context) => CounterDemo()))
+        },
+      ),
+    );
+  }
+}
+
+class CounterDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+            title: Text('counter')
+        ),
+        body: FileIODemo()
+    );
+  }
+}
+
 
 class FileIODemo extends StatefulWidget {
   FileIODemo({Key key}) : super(key: key);
@@ -72,11 +99,11 @@ class _FileIODemoState extends State<FileIODemo> {
       return _file;
     }
   }
-
   _saveCounter() async {
     final File file = await _localFile;
     file.writeAsString(_counter.toString());
   }
+
 
   @override
   Widget build(BuildContext context) {
