@@ -1,146 +1,115 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
 const IMAGE_SRC =
     'http://imglf3.nosdn.127.net/img/Mm9KQTVTN2NLSmxOdXp0Q3pRMTYycm1IakVPcERLOTNPVjRTcEJrZ2M5ZUpuMk1WMXJGNEhBPT0.jpg';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text('文件读写 Demo'),
-          ),
-          body: HomeDemo()),
-    );
+Future<void> main() async {
+  final cameras = await availableCameras();
+  Widget _body;
+  if (cameras.length > 0) {
+    _body = HomeContent(camera: cameras[0]);
+  } else {
+    _body = Center(child: Text('No Cameras'));
   }
-}
-
-class HomeDemo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: OutlineButton(
-        child: Text('go to counter'),
-        onPressed: () => {
-          Navigator.of(context).push(MaterialPageRoute(builder:(context) => CounterDemo()))
-        },
-      ),
-    );
-  }
-}
-
-class CounterDemo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  runApp(MaterialApp(
+    home: Scaffold(
       appBar: AppBar(
-        title: Text('counter')
+        title: Text('Camera Demo'),
       ),
-      body: FileIODemo()
-    );
-  }
+      body: _body,
+    ),
+  ));
 }
 
+class HomeContent extends StatefulWidget {
+  final CameraDescription camera;
+  HomeContent({Key key, @required this.camera}) : super(key: key);
 
-class FileIODemo extends StatefulWidget {
-  FileIODemo({Key key}) : super(key: key);
-
-  _FileIODemoState createState() => _FileIODemoState();
+  _HomeContentState createState() => _HomeContentState();
 }
 
-class _FileIODemoState extends State<FileIODemo> {
-  int _counter = 0;
-  File _file;
+class _HomeContentState extends State<HomeContent> {
+  CameraController _cameraController;
+  Future<void> _initializeControllerFuture;
 
-  _FileIODemoState() {
-    _initFile();
-  }
   @override
   void initState() {
     super.initState();
-    _initCounter();
+    _cameraController =
+        CameraController(widget.camera, ResolutionPreset.medium);
+    _initializeControllerFuture = _cameraController.initialize();
   }
 
-  _initCounter() async {
-    final File file = await _localFile;
-    final String res = await file.readAsString();
-    setState(() {
-      _counter = int.parse(res ?? 0);
-    });
+  @override
+  void dispose() {
+    _cameraController.dispose();
+    super.dispose();
   }
-
-  _initFile() async {
-    _file = await _localFile;
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    print(directory.path);
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    if (_file is File) {
-      return _file;
-    } else {
-      final String path = await _localPath;
-      _file = File('$path/counter.txt');
-      return _file;
-    }
-  }
-  _saveCounter() async {
-    final File file = await _localFile;
-    file.writeAsString(_counter.toString());
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(_counter.toString()),
-          ],
+        FutureBuilder<void>(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If the Future is complete, display the preview.
+              return Container(
+                child: CameraPreview(_cameraController),
+                width: 400,
+                height: 300,
+              );
+            } else {
+              // Otherwise, display a loading indicator.
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            RaisedButton(
-              child: Text('-'),
-              onPressed: () {
-                setState(() {
-                  _counter -= 1;
-                  _saveCounter();
-                });
-              },
-            ),
-            RaisedButton(
-              child: Text('+'),
-              onPressed: () {
-                setState(() {
-                  _counter += 1;
-                  _saveCounter();
-                });
-              },
-            ),
-          ],
-        )
+        SizedBox(height: 30),
+        RaisedButton(
+          child: Icon(Icons.camera),
+          onPressed: () async {
+            try {
+              await _initializeControllerFuture;
+              final dateTime = DateTime.now();
+              final path = join((await getApplicationDocumentsDirectory()).path,
+                  '${dateTime.millisecondsSinceEpoch}.png');
+              await _cameraController.takePicture(path);
+
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DisplayPictureScreen(imagePath: path),
+              ));
+              Scaffold.of(context).showSnackBar(SnackBar(content: Text(path)));
+            } catch (err, stack) {
+              print(err);
+            }
+          },
+        ),
       ],
+    );
+  }
+}
+
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Image Picture'),
+      ),
+      body: Center(
+        child: Image.file(File(imagePath)),
+      ),
     );
   }
 }

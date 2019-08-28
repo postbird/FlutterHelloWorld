@@ -78,8 +78,9 @@ class _HomeContentState extends State<HomeContent> {
           onPressed: () async {
             try {
               await _initializeControllerFuture;
-              final path = join((await getTemporaryDirectory()).path,
-                  '${DateTime.now()}.png');
+              final dateTime = DateTime.now();
+              final path = join((await getApplicationDocumentsDirectory()).path,
+                  '${dateTime.millisecondsSinceEpoch}.png');
               await _cameraController.takePicture(path);
 
               Navigator.of(context).push(MaterialPageRoute(
